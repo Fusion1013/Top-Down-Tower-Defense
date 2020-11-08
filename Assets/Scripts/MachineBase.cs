@@ -41,7 +41,8 @@ public class MachineBase : MonoBehaviour
     private GameObject particleOnDeath;
     private GameObject target;
 
-    public List<ITurretModifier> turretModifications;
+    // Machine Modifications
+    public List<SimpleMachineModifierSO> machineModifiers = new List<SimpleMachineModifierSO>();
 
     void Start()
     {
@@ -73,11 +74,13 @@ public class MachineBase : MonoBehaviour
         {
             EnableMachine();
         }
+    }
 
-        // Modifies the turret according to the modifiers
-        for (int i = 0; i < turretModifications.Count; i++)
+    private void LoadModifiers()
+    {
+        foreach (SimpleMachineModifierSO modifier in machineModifiers)
         {
-            turretModifications[i].ModifyTurret(this);
+
         }
     }
 
