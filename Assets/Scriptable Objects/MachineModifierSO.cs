@@ -5,14 +5,24 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Machine Modifier", menuName = "ScriptableObjects/MachineModifier", order = 1)]
 public class SimpleMachineModifierSO : ScriptableObject
 {
-    [Space]
-    [Header("General Statistics")]
+    [Header("Max Health")]
+    public ModifierType maxHealthModifierType;
     public float maxHealth;
+    [Header("Max Speed")]
+    public ModifierType maxSpeedModifierType;
     public float maxSpeed;
 
-    [Space]
-    [Header("View Settings")]
+    [Header("View Radius")]
+    public ModifierType viewRadiusModifierType;
     public float viewRadius;
-    [Range(0, 360)]
+    [Header("View Angle")]
+    public ModifierType viewAngleModifierType;
     public float viewAngle;
+
+    public enum ModifierType
+    {
+        Additative,
+        Multiplative,
+        Override
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static MachineScriptableObject;
+using static SimpleMachineModifierSO;
 
 public class MachineBase : MonoBehaviour
 {
@@ -11,14 +12,16 @@ public class MachineBase : MonoBehaviour
      * THE MACHINE BASE SCRIPT SHOULD NEVER CALL ANY OTHER EXTERNAL SCRIPTS
      */
 
-    // Scriptable Object holding all machine data
-    public MachineScriptableObject machineScript;
-    private bool machineEnabled = false;
-
     // Machine Type Settings
-    private MachineType machineType;
-    private MovementType movementType;
-    private ShooterType shooterType;
+    [Header("Machine Type Settings")]
+    public MachineType machineType;
+    public MovementType movementType;
+    public ShooterType shooterType;
+
+    // Machine Modifications
+    public List<SimpleMachineModifierSO> machineModifiers = new List<SimpleMachineModifierSO>();
+    
+    private bool machineEnabled = false;
     
     // General Statistics
     private float maxHealth;
@@ -41,24 +44,8 @@ public class MachineBase : MonoBehaviour
     private GameObject particleOnDeath;
     private GameObject target;
 
-    // Machine Modifications
-    public List<SimpleMachineModifierSO> machineModifiers = new List<SimpleMachineModifierSO>();
-
     void Start()
     {
-        // Load MachineScript
-        machineType = machineScript.machineType;
-        movementType = machineScript.movementType;
-        shooterType = machineScript.shooterType;
-        maxHealth = machineScript.maxHealth;
-        maxSpeed = machineScript.maxSpeed;
-        viewRadius = machineScript.viewRadius;
-        viewAngle = machineScript.viewAngle;
-        fireCooldown = machineScript.fireCooldown;
-        targetLayer = machineScript.targetLayer;
-        missile = machineScript.missile;
-        particleOnDeath = machineScript.particleOnDeath;
-
         // Instantiate variables
         currentHealth = maxHealth;
         currentSpeed = maxSpeed;
@@ -78,10 +65,38 @@ public class MachineBase : MonoBehaviour
 
     private void LoadModifiers()
     {
-        foreach (SimpleMachineModifierSO modifier in machineModifiers)
-        {
+        SimpleMachineModifierSO defaultModifier = machineModifiers[0];
+        maxHealth = CalculateModifier(maxHealth, defaultModifier.maxHealth, defaultModifier.maxHealthModifierType);
+        maxSpeed = CalculateModifier(maxSpeed, defaultModifier.maxSpeed, defaultModifier.maxSpeedModifierType);
+        viewRadius = CalculateModifier(viewRadius, defaultModifier.viewRadius, defaultModifier.viewRadiusModifierType);
+        viewAngle = CalculateModifier(viewAngle, defaultModifier.viewAngle, defaultModifier.viewAngleModifierType);
 
+        for (int i = 1; i < machineModifiers.Count; i++)
+        {
+            SimpleMachineModifierSO modifier = machineModifiers[i];
+
+            maxHealth = CalculateModifier(maxHealth, modifier.maxHealth, modifier.maxHealthModifierType);
+            maxSpeed = CalculateModifier(maxSpeed, modifier.maxSpeed, modifier.maxSpeedModifierType);
+            viewRadius = CalculateModifier(viewRadius, modifier.viewRadius, modifier.viewRadiusModifierType);
+            viewAngle = CalculateModifier(viewAngle, modifier.viewAngle, modifier.viewAngleModifierType);
         }
+    }
+
+    private float CalculateModifier(float pre, float value, ModifierType type)
+    {
+        switch (type)
+        {
+            case ModifierType.Additative:
+                return pre + value;
+            case ModifierType.Multiplative:
+                return pre * value;
+            case ModifierType.Override:
+                return value;
+            default:
+                break;
+        }
+
+        return pre;
     }
 
     void Update()

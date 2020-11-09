@@ -27,7 +27,7 @@ public class ShooterController : MonoBehaviour
     private void ShootTowards(Vector3 dir)
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position + dir, Quaternion.identity);
-        BulletController controller = projectile.GetComponent<BulletController>();
-        controller.direction = dir;
+        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        projectileScript.direction = dir;
     }
 }
