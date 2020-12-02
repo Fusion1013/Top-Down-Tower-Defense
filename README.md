@@ -6,3 +6,4 @@ It is largely unfinished in its current state, and there is no actual gameplay. 
 Future plans:
 Implement modifiers for turrets
 (Levels?)
+Spawn effect
