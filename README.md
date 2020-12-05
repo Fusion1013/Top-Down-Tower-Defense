@@ -7,3 +7,4 @@ Future plans:
 Implement modifiers for turrets
 (Levels?)
 Spawn effect
+ttr
