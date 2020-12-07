@@ -8,4 +8,4 @@ Implement modifiers for turrets
 (Levels?)
 Spawn effect
 ttr
-Modifiers
+Modifiers (Projectile & Stats)
